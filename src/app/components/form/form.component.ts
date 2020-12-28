@@ -3,6 +3,7 @@ import { Cliente } from '../clientes/cliente';
 import { ClienteService } from '../../services/cliente.service';
 import {Router, ActivatedRoute} from '@angular/router';
 import swal from 'sweetalert2';
+import { rejects } from 'assert';
 @Component({
   selector: 'app-form',
   templateUrl: './form.component.html',
@@ -11,7 +12,7 @@ import swal from 'sweetalert2';
 export class FormComponent implements OnInit {
   cliente:Cliente =new Cliente()
   constructor(private clienteService:ClienteService,private rout:Router,private routActive:ActivatedRoute) { }
-
+  public errores: string[];
   ngOnInit(): void {
     this.cargarCliente()
   }
@@ -24,7 +25,11 @@ export class FormComponent implements OnInit {
 )
     this.rout.navigate(['/clientes'])
     console.log(this.cliente);
-    })
+    },
+    err => {
+      this.errores = err.error.errors as string[];
+    }
+    );
     }
    cargarCliente():void{
       this.routActive.params.subscribe(resp=>{
@@ -46,7 +51,10 @@ export class FormComponent implements OnInit {
           'success'
         )
         
-      })
+      }),
+      err => {
+        this.errores = err.error.errors as string[];
+      }
     }
 
 }

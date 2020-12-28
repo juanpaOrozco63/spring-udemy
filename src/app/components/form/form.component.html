@@ -1,4 +1,9 @@
 <div class="container mt-3">
+    <ul class="alert alert-danger" *ngIf="errores?.length>0">
+        <li *ngFor="let err of errores">
+            {{err}}
+        </li>
+    </ul>
     <div class="mb-3">
         <h1 *ngIf="!cliente.id else elseTittle">
             Crear Cliente
@@ -10,32 +15,65 @@
         </ng-template>
         <hr>
     </div>
-    <form>
+    <form #clienteForm="ngForm">
         <div class="form-group row">
             <label for="nombre" class="col-form-label col-sm-2">Nombre</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" placeholder="Nombre">
+                <input type="text" class="form-control" [(ngModel)]="cliente.nombre" name="nombre" placeholder="Nombre" #nombre="ngModel">
+                <div class="alert alert-danger" *ngIf="nombre.invalid && (nombre.dirty || nombre.touched)">
+                    <div *ngIf="nombre.errors.required">
+                        Nombre es requerido
+                    </div>
+                    <div *ngIf="nombre.errors.minlength">
+                        Nombre debe tener al menos 4 caracteres
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-group row">
             <label for="apellido" class="col-form-label col-sm-2">Apellido</label>
             <div class="col-sm-6">
-                <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" placeholder="Apellido">
+                <input type="text" class="form-control" [(ngModel)]="cliente.apellido" name="apellido" placeholder="Apellido" #apellido="ngModel">
+                <div class="alert alert-danger" *ngIf="apellido.invalid && (apellido.dirty || apellido.touched)">
+                    <div *ngIf="apellido.errors.required">
+                        Apellido es requerido
+                    </div>
+                    <div *ngIf="apellido.errors.minlength">
+                        Apellido debe tener al menos 4 caracteres
+                    </div>
+                </div>
             </div>
         </div>
         <div class="form-group row">
             <label for="email" class="col-form-label col-sm-2">Email</label>
             <div class="col-sm-6">
-                <input type="email " class="form-control" [(ngModel)]="cliente.email" name="email" placeholder="Email">
+                <input type="email " class="form-control" [(ngModel)]="cliente.email" name="email" placeholder="Email" #email="ngModel">
+                <div class="alert alert-danger" *ngIf="email.invalid && (email.dirty || email.touched)">
+                    <div *ngIf="email.errors.required">
+                        Email es requerido
+                    </div>
+                    <div *ngIf="email.errors.email">
+                        Email debe tener un formato valido
+                    </div>
+
+                </div>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="createAt" class="col-form-label col-sm-2">createAt</label>
+            <div class="col-sm-6">
+                <input type="date" class="form-control" [(ngModel)]="cliente.createAt" name="createAt">
+
             </div>
         </div>
         <div class="form-group row">
             <div class="col-sm-2">
+
             </div>
             <div class="col-sm-6">
-                <button class="btn btn-success btn-block" (click)="create()" *ngIf="!cliente.id else elseBlock" type="button">Crear</button>
+                <button class="btn btn-success btn-block" (click)="create()" *ngIf="!cliente.id else elseBlock" type="button" [disabled]="!clienteForm.form.valid">Crear</button>
                 <ng-template #elseBlock>
-                    <button class="btn btn-success btn-block" (click)="updateCliente()" type="button">Actualizar</button>
+                    <button class="btn btn-success btn-block" (click)="updateCliente()" type="button" [disabled]="!clienteForm.form.valid">Actualizar</button>
 
                 </ng-template>
             </div>

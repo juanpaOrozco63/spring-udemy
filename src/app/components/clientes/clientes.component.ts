@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { Cliente } from './cliente';
 import { ClienteService } from '../../services/cliente.service';
 import Swal from 'sweetalert2/dist/sweetalert2.js'
+import { tap } from 'rxjs/operators';
+import { ActivatedRoute } from '@angular/router';
 @Component({
   selector: 'app-clientes',
   templateUrl: './clientes.component.html',
@@ -9,13 +11,30 @@ import Swal from 'sweetalert2/dist/sweetalert2.js'
 })
 export class ClientesComponent implements OnInit {
   clientes:Cliente[];
-  constructor(private clienteService:ClienteService) { }
-
+  paginator:any;
+  constructor(private clienteService:ClienteService, private activatedRoute:ActivatedRoute) { }
   ngOnInit(): void {
-    this.clienteService.getClientes().subscribe(
-      clientes => this.clientes =clientes
-    )
-  }
+    this.activatedRoute.paramMap.subscribe( params => {
+      let page:number = +params.get('number');
+      if(!page){
+        page=0;
+      }
+      this.clienteService.getClientes(page)
+      .pipe(
+        tap((response:any)=>{
+          (response.content as Cliente[]).forEach(cliente =>{
+          })
+        })
+        )
+        .subscribe(
+          response => {
+            this.clientes =response.content as Cliente[]
+            this.paginator =response;
+          });
+        }
+          )
+          
+        }
   deleteCliente(cliente:Cliente):void{
   Swal.fire({
     title: 'Estas seguro?',

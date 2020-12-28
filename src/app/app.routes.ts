@@ -9,6 +9,7 @@ import { HomeComponent } from './components/home/home.component';
 
 export const ROUTES: Routes = [
     { path: 'clientes', component: ClientesComponent },
+    { path: 'clientes/page/:number', component: ClientesComponent },
     { path: 'directivas', component: DirectivaComponent },
     { path: 'clientes/formulario', component: FormComponent },
     { path: 'home', component: HomeComponent },
